@@ -61,7 +61,9 @@ BEGIN
 	FROM
 	(SELECT ROW_NUMBER() OVER (PARTITION BY cst_id ORDER BY cst_create_date DESC) flag_last,*
 	FROM bronze.crm_cust_info) t
-	WHERE t.flag_last = 1; 
+	WHERE t.flag_last = 1
+	AND cst_id IS NOT NULL; 
+
 	GET DIAGNOSTICS r_count = ROW_COUNT;
 	RAISE NOTICE 'silver.crm_cust_info - Inserted rows %',r_count;
 	end_time := clock_timestamp();
